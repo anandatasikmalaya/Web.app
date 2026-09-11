@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANANDA TASIKMALAYA - Fashion & Pusat Belanja Keluarga</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* RESET & BASE STYLES */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+    :root {
+      --primary-red: #D32F2F;
+      --dark-red: #9A0007;
+      --accent-gold: #FFC107;
+      --light-bg: #F4F4F4;
+      --dark-text: #212121;
+      --gray-text: #666666;
+      --border-color: #E0E0E0;
+    }
+    body {
+      background-color: var(--light-bg);
+      color: var(--dark-text);
+      line-height: 1.6;
+    }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+
+    /* HEADER & NAVIGATION */
+    header {
+      background-color: var(--primary-red);
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.6rem 1rem;
+    }
+
+    /* BRAND LOGO */
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-logo i {
+      font-size: 1.5rem;
+      color: var(--accent-gold);
+    }
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+    .brand-text .title-main {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      color: #ffffff;
+    }
+    .brand-text .title-sub {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 1.8px;
+      color: var(--accent-gold);
+    }
+
+    .nav-links { display: flex; gap: 1rem; align-items: center; }
+    .nav-links a {
+      font-weight: 600;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.95rem;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      background-color: var(--dark-red);
+    }
+    .menu-toggle {
+      display: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+    }
+
+    /* SECTION LAYOUTS */
+    section {
+      display: none;
+      padding: 1.5rem 1rem;
+      max-width: 800px;
+      margin: 0 auto;
+      min-height: calc(100vh - 180px);
+    }
+    section.active-section { display: block; }
+    .section-title {
+      text-align: center;
+      font-size: 1.6rem;
+      color: var(--primary-red);
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    /* BERANDA */
+    .hero {
+      background: linear-gradient(rgba(211, 47, 47, 0.85), rgba(154, 0, 7, 0.85)), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      text-align: center;
+      padding: 3rem 1rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+    .hero h1 { font-size: 1.8rem; margin-bottom: 0.8rem; }
+    .hero p { font-size: 0.95rem; max-width: 600px; margin: 0 auto 1.5rem; }
+    .btn-cta {
+      background-color: var(--accent-gold);
+      color: var(--dark-text);
+      padding: 0.7rem 1.8rem;
+      font-weight: bold;
+      border-radius: 20px;
+      display: inline-block;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .feature-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      text-align: center;
+      border-top: 4px solid var(--primary-red);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .feature-card i { font-size: 2rem; color: var(--primary-red); margin-bottom: 0.5rem; }
+
+    /* PENCARIAN & FILTER PRODUK */
+    .search-box {
+      position: relative;
+      max-width: 600px;
+      margin: 0 auto 1rem;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 0.8rem 1rem 0.8rem 2.8rem;
+      border: 2px solid var(--primary-red);
+      border-radius: 25px;
+      font-size: 0.95rem;
+      outline: none;
+    }
+    .search-box i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary-red);
+      font-size: 1.1rem;
+    }
+
+    .filter-container {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.8rem;
+      margin-bottom: 1rem;
+      scrollbar-width: none;
+    }
+    .filter-container::-webkit-scrollbar { display: none; }
+    .filter-btn {
+      background: white;
+      border: 1px solid var(--border-color);
+      padding: 0.4rem 1rem;
+      border-radius: 15px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+    .filter-btn.active {
+      background-color: var(--primary-red);
+      color: white;
+      border-color: var(--primary-red);
+    }
+
+    /* GRID PRODUK 2 KOLOM */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    @media (min-width: 768px) {
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+      }
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .product-img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+    }
+    .product-info {
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-grow: 1;
+    }
+    .product-title {
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: #333;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    .product-price {
+      font-size: 1rem;
+      color: var(--primary-red);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .badge-promo {
+      display: inline-block;
+      background: #ffeae6;
+      color: var(--primary-red);
+      font-size: 0.65rem;
+      font-weight: bold;
+      padding: 2px 4px;
+      border-radius: 2px;
+      width: fit-content;
+      margin-bottom: 6px;
+    }
+    .product-meta {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.7rem;
+      color: var(--gray-text);
+    }
+    .product-meta i { color: #ffc107; font-size: 0.65rem; }
+
+    /* MODAL DETAIL PRODUK & CART */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      padding: 1rem;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-card {
+      background: white;
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      border-radius: 12px;
+      overflow-y: auto;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 10px; right: 12px;
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1rem;
+      z-index: 10;
+    }
+    
+    .gallery-container {
+      position: relative;
+      width: 100%;
+    }
+    .modal-img-wrapper {
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+    }
+    .modal-img { 
+      width: 100%; 
+      max-height: 280px; 
+      object-fit: cover; 
+      display: block;
+      transition: transform 0.2s ease;
+    }
+    .modal-img-wrapper:hover .modal-img {
+      transform: scale(1.02);
+    }
+    .zoom-hint {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(0, 0, 0, 0.65);
+      color: white;
+      font-size: 0.7rem;
+      padding: 4px 8px;
+      border-radius: 12px;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .thumbnails-list {
+      display: flex;
+      gap: 6px;
+      padding: 8px 12px;
+      overflow-x: auto;
+      background: #fafafa;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .thumb-img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      opacity: 0.6;
+      transition: all 0.2s;
+    }
+    .thumb-img.active-thumb {
+      border-color: var(--primary-red);
+      opacity: 1;
+    }
+
+    /* MODAL FULLSCREEN FOTO */
+    .fullscreen-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.95);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 3000;
+      padding: 0;
+    }
+    .fullscreen-overlay.active { display: flex; }
+    .fullscreen-img {
+      max-width: 95vw;
+      max-height: 85vh;
+      object-fit: contain;
+      user-select: none;
+    }
+    .fullscreen-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.5rem;
+      z-index: 3010;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .fullscreen-close:hover {
+      background: rgba(255, 255, 255, 0.4);
+    }
+    .fullscreen-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      z-index: 3010;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .fullscreen-nav:hover { background: rgba(255, 255, 255, 0.4); }
+    .fullscreen-prev { left: 15px; }
+    .fullscreen-next { right: 15px; }
+    .fullscreen-counter {
+      position: absolute;
+      bottom: 20px;
+      color: white;
+      font-size: 0.9rem;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 4px 12px;
+      border-radius: 12px;
+    }
+
+    .modal-body { padding: 1.2rem; }
+    .modal-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; }
+    .modal-price { font-size: 1.3rem; color: var(--primary-red); font-weight: bold; margin-bottom: 10px; }
+    
+    .stock-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+    .stock-in { background-color: #E8F5E9; color: #2E7D32; }
+    .stock-low { background-color: #FFF3E0; color: #E65100; }
+
+    .option-group { margin-bottom: 12px; }
+    .option-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .option-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
+    .opt-btn {
+      background: #f0f0f0;
+      border: 1px solid #ccc;
+      padding: 5px 12px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .opt-btn:hover { background: #e0e0e0; }
+    .opt-btn.active {
+      background: var(--primary-red);
+      color: white;
+      border-color: var(--primary-red);
+    }
+
+    .modal-desc-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 4px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; margin-top: 10px; }
+    .modal-desc { font-size: 0.85rem; color: #555; margin-bottom: 1.2rem; line-height: 1.4; }
+    .modal-buttons { display: flex; flex-direction: column; gap: 8px; }
+    
+    .buy-btn {
+      padding: 0.7rem;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-cart { background-color: #FF9800; }
+    .btn-wa { background-color: #25D366; }
+
+    .marketplace-section-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #666;
+      margin-top: 10px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .marketplace-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .btn-mp {
+      padding: 0.5rem 0.2rem;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-shopee { background-color: #EE4D2D; }
+    .btn-lazada { background-color: #0F146D; }
+    .btn-tiktok { background-color: #000000; }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 0;
+    }
+    .cart-item-details { flex-grow: 1; padding-right: 10px; }
+    .cart-item-title { font-size: 0.9rem; font-weight: 600; }
+    .cart-item-variant { font-size: 0.75rem; color: #666; }
+    .cart-item-price { font-size: 0.85rem; color: var(--primary-red); font-weight: 700; }
+    .cart-item-qty { display: flex; align-items: center; gap: 6px; }
+    .qty-btn {
+      background: #eee; border: 1px solid #ccc;
+      width: 24px; height: 24px; border-radius: 4px;
+      cursor: pointer; font-weight: bold;
+    }
+    .cart-summary {
+      margin-top: 15px;
+      border-top: 2px solid var(--primary-red);
+      padding-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      font-size: 1.05rem;
+    }
+
+    .floating-buttons {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 1500;
+    }
+    .floating-icon {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      color: white;
+      position: relative;
+      cursor: pointer;
+    }
+    .floating-wa-btn { background-color: #25D366; }
+    .floating-cart-btn { background-color: #FF9800; }
+    .cart-badge-count {
+      position: absolute;
+      top: -4px; right: -4px;
+      background: var(--primary-red);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: bold;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid white;
+    }
+
+    .card-box {
+      background: white;
+      padding: 1.8rem 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      margin-bottom: 1.5rem;
+    }
+    .card-box p { color: #444; font-size: 0.95rem; margin-bottom: 1rem; }
+
+    .commit-title { color: var(--primary-red); font-weight: 700; font-size: 1.1rem; margin: 1.8rem 0 1.2rem 0; }
+    .value-item { border-left: 4px solid var(--primary-red); padding-left: 1rem; margin-bottom: 1.5rem; }
+    .value-item h4 { color: var(--primary-red); font-size: 1rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .value-item p { color: #555; font-size: 0.9rem; margin-bottom: 0; }
+
+    .contact-item { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.2rem; }
+    .contact-item i { font-size: 1.3rem; color: var(--primary-red); margin-top: 2px; }
+    .contact-item strong { display: block; color: #222; font-size: 0.95rem; margin-bottom: 2px; }
+    .contact-item p, .contact-item a { color: #555; font-size: 0.9rem; margin-bottom: 0; }
+
+    .sosmed-title { font-weight: 700; font-size: 1rem; color: #222; margin-bottom: 1rem; }
+    .social-icons { display: flex; gap: 0.8rem; }
+    .social-circle {
+      width: 45px; height: 45px;
+      background-color: var(--primary-red);
+      color: white; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .map-frame-container {
+      width: 100%; height: 280px;
+      border-radius: 8px; overflow: hidden;
+      margin-top: 0.8rem; border: 1px solid var(--border-color);
+    }
+    .map-frame-container iframe { width: 100%; height: 100%; border: 0; }
+
+    footer {
+      background-color: #1a1a1a;
+      color: white;
+      text-align: center;
+      padding: 1.5rem;
+      margin-top: 2rem;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle { display: block; }
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%; left: 0; width: 100%;
+        background-color: var(--primary-red);
+        padding: 1rem;
+      }
+      .nav-links.show { display: flex; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <nav class="navbar">
+      <div class="brand-logo">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <div class="brand-text">
+          <span class="title-main">ANANDA</span>
+          <span class="title-sub">TASIKMALAYA</span>
+        </div>
+      </div>
+      <div class="menu-toggle" id="mobile-menu"><i class="fas fa-bars"></i></div>
+      <ul class="nav-links" id="nav-list">
+        <li><a href="#" class="nav-item active" data-target="beranda">Beranda</a></li>
+        <li><a href="#" class="nav-item" data-target="produk">Layanan & Produk</a></li>
+        <li><a href="#" class="nav-item" data-target="tentang">Tentang Kami</a></li>
+        <li><a href="#" class="nav-item" data-target="kontak">Hubungi Kami</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section id="beranda" class="active-section">
+    <div class="hero">
+      <h1>Selamat Datang di ANANDA TASIKMALAYA</h1>
+      <p id="home-text-display">Pusat fashion & kebutuhan keluarga terlengkap di Tasikmalaya. Tampil gaya, elegan, dan nyaman setiap hari!</p>
+      <a href="#" class="btn-cta nav-item" data-target="produk">Belanja Sekarang</a>
+    </div>
+
+    <h2 class="section-title">Keunggulan Kami</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <i class="fas fa-tags"></i>
+        <h3>Harga Terbaik</h3>
+        <p>Kualitas produk pilihan dengan harga ramah di kantong.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-boxes-packing"></i>
+        <h3>Koleksi Lengkap</h3>
+        <p>Pakaian, sepatu, perlengkapan bayi, sekolah, hingga muslim.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-store"></i>
+        <h3>Kemudahan Belanja</h3>
+        <p>Bisa pesan fleksibel lewat WhatsApp atau Marketplace kesayangan Anda.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="produk">
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input type="text" id="search-input" placeholder="Cari pakaian, sepatu, perlengkapan baby...">
+    </div>
+
+    <div class="filter-container">
+      <button class="filter-btn active" data-filter="all">Semua</button>
+      <button class="filter-btn" data-filter="pakaian">Pakaian</button>
+      <button class="filter-btn" data-filter="sepatu">Sepatu</button>
+      <button class="filter-btn" data-filter="tas">Tas & Aksesoris</button>
+      <button class="filter-btn" data-filter="baby">Perlengkapan Baby</button>
+      <button class="filter-btn" data-filter="sekolah">Perlengkapan Sekolah</button>
+      <button class="filter-btn" data-filter="muslim">Perlengkapan Muslim</button>
+      <button class="filter-btn" data-filter="tidur">Perlengkapan Tidur</button>
+    </div>
+
+    <div class="products-grid" id="products-container"></div>
+  </section>
+
+  <section id="tentang">
+    <h2 class="section-title">Tentang Kami</h2>
+    <div class="card-box">
+      <p id="about-text-display">
+        <strong>ANANDA TASIKMALAYA</strong> hadir sebagai solusi belanja serba ada (one-stop shopping) untuk seluruh anggota keluarga Anda. Berawal dari komitmen memberikan produk fashion dan kebutuhan harian berkualitas tinggi, kami terus berkembang menghadirkan pilihan ragam produk dari pakaian kasual, sepatu trendi, aksesoris, hingga perlengkapan tidur dan bayi.
+      </p>
+
+      <div class="commit-title">Komitmen Kami Untuk Anda:</div>
+
+      <div class="value-item">
+        <h4>Kualitas Terjamin</h4>
+        <p>Bahan pilihan yang nyaman dipakai sepanjang hari.</p>
+      </div>
+
+      <div class="value-item">
+        <h4>Pilihan Terbanyak</h4>
+        <p>Model selalu diperbarui mengikuti tren terkini.</p>
+      </div>
+
+      <div class="value-item">
+        <h4>Pelayanan Ramah</h4>
+        <p>Respon cepat dan siap membantu kebutuhan belanja Anda.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="kontak">
+    <h2 class="section-title">Hubungi Kami</h2>
+    
+    <div class="card-box">
+      <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; color: var(--primary-red);">Informasi Toko</h3>
+      
+      <div class="contact-item">
+        <i class="fas fa-map-marker-alt"></i>
+        <div>
+          <strong>Alamat Toko:</strong>
+          <p>Jln. KHZ Mustofa No. 123, Kel. Yudanegara, Kec. Cihideung, Kota Tasikmalaya.</p>
+        </div>
+      </div>
+
+      <div class="contact-item">
+        <i class="fab fa-whatsapp"></i>
+        <div>
+          <strong>WhatsApp Official:</strong>
+          <p><a href="https://wa.me/6285624670796" id="contact-phone-link" target="_blank">+62 856-2467-0796</a></p>
+        </div>
+      </div>
+
+      <div class="contact-item">
+        <i class="fas fa-clock"></i>
+        <div>
+          <strong>Jam Operasional:</strong>
+          <p>Senin - Minggu (08:30 - 20:30 WIB)</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-box">
+      <div class="sosmed-title">Temukan Kami di Media Sosial:</div>
+      <div class="social-icons">
+        <a href="https://www.instagram.com/anandashop_official.tasik?igsi=bnM5MXNmaWJpMDRk" target="_blank" class="social-circle" title="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.facebook.com/share/19NYbwebLf/" target="_blank" class="social-circle" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.tiktok.com/@ananda_tasikmalaya?_r=1&_t=ZS-99GYs2wNvfD" target="_blank" class="social-circle" title="TikTok"><i class="fab fa-tiktok"></i></a>
+      </div>
+    </div>
+
+    <div class="card-box">
+      <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.3rem;">Lokasi Toko</h3>
+      <p style="color: #666; font-size: 0.9rem; margin-bottom: 0.8rem;">
+        Kunjungi toko fisik kami di Tasikmalaya atau klik petunjuk arah melalui Google Maps.
+      </p>
+
+      <div class="map-frame-container">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.262529683794!2d108.2198031!3d-7.3243956!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6f574719bb801b%3A0xa19c4d9a5b674844!2sAnanda%20Tasikmalaya!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+
+      <div style="margin-top: 10px; text-align: right;">
+        <a href="https://maps.app.goo.gl/HGkF2vm44kwxweV16" target="_blank" style="font-size: 0.85rem; color: var(--primary-red); font-weight: bold;">
+          <i class="fas fa-external-link-alt"></i> Buka Petunjuk Arah via Google Maps
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODAL DETAIL PRODUK -->
+  <div class="modal-overlay" id="product-modal">
+    <div class="modal-card">
+      <button class="modal-close" id="close-modal">×</button>
+      
+      <div class="gallery-container">
+        <div class="modal-img-wrapper" id="open-fullscreen-btn" title="Klik untuk lihat foto ukuran penuh">
+          <img src="" id="modal-img" class="modal-img" alt="">
+          <div class="zoom-hint"><i class="fas fa-expand"></i> Fullscreen</div>
+        </div>
+        <div class="thumbnails-list" id="thumbnails-container"></div>
+      </div>
+
+      <div class="modal-body">
+        <h3 id="modal-title" class="modal-title"></h3>
+        <div id="modal-price" class="modal-price"></div>
+        
+        <div id="modal-stock" class="stock-badge stock-in"></div>
+
+        <div class="option-group" id="size-group">
+          <span class="option-label">Pilih Ukuran:</span>
+          <div class="option-buttons" id="size-options"></div>
+        </div>
+
+        <div class="option-group" id="color-group">
+          <span class="option-label">Pilih Warna:</span>
+          <div class="option-buttons" id="color-options"></div>
+        </div>
+
+        <div class="modal-desc-title">Deskripsi Produk</div>
+        <div id="modal-desc" class="modal-desc"></div>
+
+        <div class="modal-buttons">
+          <button class="buy-btn btn-cart" id="add-to-cart-btn"><i class="fas fa-cart-plus"></i> + Tambah ke Keranjang</button>
+          <a href="#" id="buy-wa" target="_blank" class="buy-btn btn-wa"><i class="fab fa-whatsapp"></i> Beli via WhatsApp</a>
+        </div>
+
+        <div class="marketplace-section-title">Atau Beli via Marketplace:</div>
+        <div class="marketplace-grid">
+          <a href="#" id="buy-shopee" target="_blank" class="btn-mp btn-shopee">
+            <i class="fas fa-bag-shopping"></i> Shopee
+          </a>
+          <a href="#" id="buy-lazada" target="_blank" class="btn-mp btn-lazada">
+            <i class="fas fa-shopping-basket"></i> Lazada
+          </a>
+          <a href="#" id="buy-tiktok" target="_blank" class="btn-mp btn-tiktok">
+            <i class="fab fa-tiktok"></i> TikTok Shop
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL FULLSCREEN FOTO PRODUK -->
+  <div class="fullscreen-overlay" id="fullscreen-modal">
+    <button class="fullscreen-close" id="close-fullscreen">✕</button>
+    <button class="fullscreen-nav fullscreen-prev" id="prev-fullscreen"><i class="fas fa-chevron-left"></i></button>
+    <img src="" class="fullscreen-img" id="fullscreen-img" alt="Foto Produk Fullscreen">
+    <button class="fullscreen-nav fullscreen-next" id="next-fullscreen"><i class="fas fa-chevron-right"></i></button>
+    <div class="fullscreen-counter" id="fullscreen-counter">1 / 1</div>
+  </div>
+
+  <!-- MODAL KERANJANG -->
+  <div class="modal-overlay" id="cart-modal">
+    <div class="modal-card">
+      <button class="modal-close" id="close-cart-modal">×</button>
+      <div class="modal-body">
+        <h3 class="modal-title" style="border-bottom: 2px solid var(--primary-red); padding-bottom: 8px;"><i class="fas fa-shopping-cart"></i> Keranjang Belanja</h3>
+        <div id="cart-items-container" style="max-height: 250px; overflow-y: auto;"></div>
+        <div class="cart-summary">
+          <span>Total Pesanan:</span>
+          <span id="cart-total-price" style="color: var(--primary-red);">Rp0</span>
+        </div>
+        <div class="modal-buttons" style="margin-top: 15px;">
+          <button class="buy-btn btn-wa" id="checkout-wa-btn"><i class="fab fa-whatsapp"></i> Checkout via WhatsApp</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="floating-buttons">
+    <div class="floating-icon floating-cart-btn" id="open-cart-btn" title="Lihat Keranjang">
+      <i class="fas fa-shopping-cart"></i>
+      <div class="cart-badge-count" id="cart-badge-count">0</div>
+    </div>
+    <a href="https://wa.me/6285624670796?text=Halo%20Ananda%20Tasikmalaya,%20saya%20ingin%20bertanya%20mengenai%20produk" id="floating-wa-link" target="_blank" class="floating-icon floating-wa-btn" title="Chat WhatsApp Kami">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
+
+  <footer>
+    <p>© 2026 ANANDA TASIKMALAYA. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    // URL Web App Google Apps Script
+    const GS_API_URL = 'https://script.google.com/macros/s/AKfycbzjdA4zrwUHxBXMzWICfVsWfQi2lS-mxgnLpGuoWXSmfdsLuus4vo7v7OkX_Hhk1KeV/exec';
+
+    let products = [];
+    let currentCategory = 'all';
+    let searchQuery = '';
+    let selectedSize = '';
+    let selectedColor = '';
+    let currentProduct = null;
+    let currentImageIndex = 0;
+    let cart = [];
+    let storePhone = '6285624670796';
+
+    const navItems = document.querySelectorAll('.nav-item');
+    const sections = document.querySelectorAll('section');
+    const navList = document.getElementById('nav-list');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    mobileMenu.addEventListener('click', () => navList.classList.toggle('show'));
+
+    navItems.forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = item.getAttribute('data-target');
+
+        document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+        const activeLink = document.querySelector(`.nav-links a[data-target="${targetId}"]`);
+        if(activeLink) activeLink.classList.add('active');
+
+        sections.forEach(sec => {
+          sec.classList.remove('active-section');
+          if (sec.id === targetId) sec.classList.add('active-section');
+        });
+
+        navList.classList.remove('show');
+        window.scrollTo(0, 0);
+      });
+    });
+
+    const productsContainer = document.getElementById('products-container');
+
+    // MENGAMBIL KONFIGURASI TOKO
+    async function fetchStoreConfig() {
+      try {
+        const res = await fetch(`${GS_API_URL}?action=read&sheet=store_config`);
+        const result = await res.json();
+        if (result.status === 'success' && result.data.length > 0) {
+          const cfg = result.data.find(item => item.id == 1) || result.data[0];
+          if (cfg.home_text) document.getElementById('home-text-display').textContent = cfg.home_text;
+          if (cfg.about_text) document.getElementById('about-text-display').textContent = cfg.about_text;
+          if (cfg.contact_phone) {
+            let phone = cfg.contact_phone.replace(/[^0-9]/g, '');
+            if (phone.startsWith('0')) phone = '62' + phone.slice(1);
+            storePhone = phone;
+            document.getElementById('contact-phone-link').href = `https://wa.me/${storePhone}`;
+            document.getElementById('contact-phone-link').textContent = `+${storePhone}`;
+            document.getElementById('floating-wa-link').href = `https://wa.me/${storePhone}?text=Halo%20Ananda%20Tasikmalaya`;
+          }
+        }
+      } catch (err) {
+        console.error('Gagal mengambil konfigurasi:', err);
+      }
+    }
+
+    // MENGAMBIL DATA PRODUK DARI GOOGLE SHEETS
+    async function fetchProductsFromBackend() {
+      productsContainer.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 2rem; color: #666;">Memuat produk dari server...</p>';
+
+      try {
+        const res = await fetch(`${GS_API_URL}?action=read&sheet=products`);
+        const result = await res.json();
+
+        if (result.status !== 'success') {
+          productsContainer.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:red; padding: 2rem;">Gagal memuat produk dari server.</p>';
+          return;
+        }
+
+        products = result.data.reverse().map(item => {
+          const parsedImages = typeof item.images === 'string' ? JSON.parse(item.images || '[]') : item.images;
+          const parsedSizes = typeof item.sizes === 'string' ? JSON.parse(item.sizes || '[]') : item.sizes;
+          const parsedColors = typeof item.colors === 'string' ? JSON.parse(item.colors || '[]') : item.colors;
+
+          return {
+            id: item.id,
+            name: item.name,
+            category: item.category,
+            rawPrice: item.raw_price,
+            price: item.price_formatted,
+            rating: item.rating || '5.0',
+            sold: item.sold || '0 Terjual',
+            stock: item.stock_status,
+            sizes: parsedSizes || ['All Size'],
+            colors: parsedColors || ['Standard'],
+            desc: item.description,
+            images: parsedImages || [],
+            links: {
+              shopee: item.link_shopee || '#',
+              lazada: item.link_lazada || '#',
+              tiktok: item.link_tiktok || '#'
+            }
+          };
+        });
+
+        renderProducts();
+      } catch (err) {
+        console.error(err);
+        productsContainer.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:red; padding: 2rem;">Gagal terhubung ke Google Sheets.</p>';
+      }
+    }
+
+    function renderProducts() {
+      const filtered = products.filter(p => {
+        const matchesCategory = (currentCategory === 'all' || p.category === currentCategory);
+        const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesCategory && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        productsContainer.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: #777; padding: 2rem 0;">Produk tidak ditemukan.</p>`;
+        return;
+      }
+
+      productsContainer.innerHTML = filtered.map(p => `
+        <div class="product-card" onclick="openModal(${p.id})">
+          <img src="${p.images[0] || ''}" alt="${p.name}" class="product-img">
+          <div class="product-info">
+            <div class="product-title">${p.name}</div>
+            <div class="product-price">${p.price}</div>
+            <span class="badge-promo"><i class="fas fa-thumbs-up"></i> Garansi Harga Terbaik</span>
+            <div class="product-meta">
+              <i class="fas fa-star"></i>
+              <span>${p.rating}</span> | <span>${p.sold}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      searchQuery = e.target.value;
+      renderProducts();
+    });
+
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCategory = btn.getAttribute('data-filter');
+        renderProducts();
+      });
+    });
+
+    const modal = document.getElementById('product-modal');
+    const closeModalBtn = document.getElementById('close-modal');
+
+    function updateWaLink() {
+      if (!currentProduct) return;
+      const sizeText = selectedSize ? `%0A- Ukuran: ${selectedSize}` : '';
+      const colorText = selectedColor ? `%0A- Warna: ${selectedColor}` : '';
+      const waText = `Halo Ananda Tasikmalaya, saya mau beli produk:%0A*${currentProduct.name}* (${currentProduct.price})${sizeText}${colorText}`;
+      document.getElementById('buy-wa').href = `https://wa.me/${storePhone}?text=${waText}`;
+    }
+
+    function openModal(id) {
+      currentProduct = products.find(p => p.id === id);
+      if (!currentProduct) return;
+
+      currentImageIndex = 0;
+      const mainImg = document.getElementById('modal-img');
+      const thumbContainer = document.getElementById('thumbnails-container');
+      
+      mainImg.src = currentProduct.images[0] || '';
+      
+      thumbContainer.innerHTML = '';
+      if (currentProduct.images && currentProduct.images.length > 1) {
+        thumbContainer.style.display = 'flex';
+        currentProduct.images.forEach((imgUrl, idx) => {
+          const thumb = document.createElement('img');
+          thumb.src = imgUrl;
+          thumb.className = `thumb-img ${idx === 0 ? 'active-thumb' : ''}`;
+          thumb.onclick = () => {
+            currentImageIndex = idx;
+            mainImg.src = imgUrl;
+            document.querySelectorAll('.thumb-img').forEach(t => t.classList.remove('active-thumb'));
+            thumb.classList.add('active-thumb');
+          };
+          thumbContainer.appendChild(thumb);
+        });
+      } else {
+        thumbContainer.style.display = 'none';
+      }
+
+      document.getElementById('modal-title').textContent = currentProduct.name;
+      document.getElementById('modal-price').textContent = currentProduct.price;
+      document.getElementById('modal-desc').textContent = currentProduct.desc;
+
+      document.getElementById('buy-shopee').href = currentProduct.links ? currentProduct.links.shopee : '#';
+      document.getElementById('buy-lazada').href = currentProduct.links ? currentProduct.links.lazada : '#';
+      document.getElementById('buy-tiktok').href = currentProduct.links ? currentProduct.links.tiktok : '#';
+
+      const stockEl = document.getElementById('modal-stock');
+      stockEl.textContent = `Stok: ${currentProduct.stock}`;
+      stockEl.className = currentProduct.stock.includes('Menipis') ? 'stock-badge stock-low' : 'stock-badge stock-in';
+
+      const sizeContainer = document.getElementById('size-options');
+      sizeContainer.innerHTML = '';
+      selectedSize = currentProduct.sizes[0] || '';
+      currentProduct.sizes.forEach((sz, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `opt-btn ${idx === 0 ? 'active' : ''}`;
+        btn.textContent = sz;
+        btn.onclick = () => {
+          document.querySelectorAll('#size-options .opt-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          selectedSize = sz;
+          updateWaLink();
+        };
+        sizeContainer.appendChild(btn);
+      });
+
+      const colorContainer = document.getElementById('color-options');
+      colorContainer.innerHTML = '';
+      selectedColor = currentProduct.colors[0] || '';
+      currentProduct.colors.forEach((col, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `opt-btn ${idx === 0 ? 'active' : ''}`;
+        btn.textContent = col;
+        btn.onclick = () => {
+          document.querySelectorAll('#color-options .opt-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          selectedColor = col;
+          updateWaLink();
+        };
+        colorContainer.appendChild(btn);
+      });
+
+      updateWaLink();
+      modal.classList.add('active');
+    }
+
+    closeModalBtn.addEventListener('click', () => modal.classList.remove('active'));
+
+    /* --- LOGIK FULLSCREEN FOTO PRODUK --- */
+    const fullscreenModal = document.getElementById('fullscreen-modal');
+    const fullscreenImg = document.getElementById('fullscreen-img');
+    const fullscreenCounter = document.getElementById('fullscreen-counter');
+    const closeFullscreenBtn = document.getElementById('close-fullscreen');
+    const prevFullscreenBtn = document.getElementById('prev-fullscreen');
+    const nextFullscreenBtn = document.getElementById('next-fullscreen');
+
+    function updateFullscreenImage() {
+      if (!currentProduct || !currentProduct.images || currentProduct.images.length === 0) return;
+      fullscreenImg.src = currentProduct.images[currentImageIndex];
+      fullscreenCounter.textContent = `${currentImageIndex + 1} / ${currentProduct.images.length}`;
+
+      if (currentProduct.images.length > 1) {
+        prevFullscreenBtn.style.display = 'flex';
+        nextFullscreenBtn.style.display = 'flex';
+      } else {
+        prevFullscreenBtn.style.display = 'none';
+        nextFullscreenBtn.style.display = 'none';
+      }
+    }
+
+    document.getElementById('open-fullscreen-btn').addEventListener('click', () => {
+      if (!currentProduct) return;
+      updateFullscreenImage();
+      fullscreenModal.classList.add('active');
+    });
+
+    closeFullscreenBtn.addEventListener('click', () => {
+      fullscreenModal.classList.remove('active');
+    });
+
+    prevFullscreenBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!currentProduct) return;
+      currentImageIndex = (currentImageIndex - 1 + currentProduct.images.length) % currentProduct.images.length;
+      updateFullscreenImage();
+      
+      // Sync thumbnail active di modal
+      const mainImg = document.getElementById('modal-img');
+      mainImg.src = currentProduct.images[currentImageIndex];
+      const thumbs = document.querySelectorAll('.thumb-img');
+      thumbs.forEach((t, i) => t.classList.toggle('active-thumb', i === currentImageIndex));
+    });
+
+    nextFullscreenBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!currentProduct) return;
+      currentImageIndex = (currentImageIndex + 1) % currentProduct.images.length;
+      updateFullscreenImage();
+
+      // Sync thumbnail active di modal
+      const mainImg = document.getElementById('modal-img');
+      mainImg.src = currentProduct.images[currentImageIndex];
+      const thumbs = document.querySelectorAll('.thumb-img');
+      thumbs.forEach((t, i) => t.classList.toggle('active-thumb', i === currentImageIndex));
+    });
+
+    fullscreenModal.addEventListener('click', (e) => {
+      if (e.target === fullscreenModal) {
+        fullscreenModal.classList.remove('active');
+      }
+    });
+
+    /* --- LOGIK KERANJANG --- */
+    const cartModal = document.getElementById('cart-modal');
+    const openCartBtn = document.getElementById('open-cart-btn');
+    const closeCartModalBtn = document.getElementById('close-cart-modal');
+    const cartItemsContainer = document.getElementById('cart-items-container');
+    const cartBadgeCount = document.getElementById('cart-badge-count');
+    const cartTotalPrice = document.getElementById('cart-total-price');
+
+    document.getElementById('add-to-cart-btn').addEventListener('click', () => {
+      if (!currentProduct) return;
+      const cartItem = {
+        id: currentProduct.id,
+        name: currentProduct.name,
+        rawPrice: currentProduct.rawPrice,
+        size: selectedSize,
+        color: selectedColor,
+        qty: 1
+      };
+
+      const existingIndex = cart.findIndex(item => item.id === cartItem.id && item.size === cartItem.size && item.color === cartItem.color);
+      if (existingIndex > -1) {
+        cart[existingIndex].qty += 1;
+      } else {
+        cart.push(cartItem);
+      }
+
+      updateCartUI();
+      modal.classList.remove('active');
+      cartModal.classList.add('active');
+    });
+
+    function updateCartUI() {
+      const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+      cartBadgeCount.textContent = totalItems;
+
+      if (cart.length === 0) {
+        cartItemsContainer.innerHTML = `<p style="text-align: center; color: #888; padding: 1.5rem 0;">Keranjang belanja masih kosong.</p>`;
+        cartTotalPrice.textContent = 'Rp0';
+        return;
+      }
+
+      let grandTotal = 0;
+      cartItemsContainer.innerHTML = cart.map((item, index) => {
+        const subtotal = item.rawPrice * item.qty;
+        grandTotal += subtotal;
+        return `
+          <div class="cart-item">
+            <div class="cart-item-details">
+              <div class="cart-item-title">${item.name}</div>
+              <div class="cart-item-variant">Ukuran: ${item.size} | Warna: ${item.color}</div>
+              <div class="cart-item-price">Rp${subtotal.toLocaleString('id-ID')}</div>
+            </div>
+            <div class="cart-item-qty">
+              <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
+              <span>${item.qty}</span>
+              <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      cartTotalPrice.textContent = `Rp${grandTotal.toLocaleString('id-ID')}`;
+    }
+
+    function changeQty(index, delta) {
+      cart[index].qty += delta;
+      if (cart[index].qty <= 0) {
+        cart.splice(index, 1);
+      }
+      updateCartUI();
+    }
+
+    openCartBtn.addEventListener('click', () => {
+      updateCartUI();
+      cartModal.classList.add('active');
+    });
+
+    closeCartModalBtn.addEventListener('click', () => cartModal.classList.remove('active'));
+
+    document.getElementById('checkout-wa-btn').addEventListener('click', () => {
+      if (cart.length === 0) {
+        alert('Keranjang belanja Anda masih kosong.');
+        return;
+      }
+
+      let orderListText = cart.map((item, i) => `${i + 1}. *${item.name}*%0A   - Ukuran: ${item.size}%0A   - Warna: ${item.color}%0A   - Jumlah: ${item.qty} pcs`).join('%0A%0A');
+      let grandTotal = cart.reduce((sum, item) => sum + (item.rawPrice * item.qty), 0);
+
+      let checkoutMsg = `Halo Ananda Tasikmalaya, saya ingin memesan barang berikut:%0A%0A${orderListText}%0A%0A*Total Pembayaran: Rp${grandTotal.toLocaleString('id-ID')}*%0A%0AMohon diproses, terima kasih!`;
+
+      window.open(`https://wa.me/${storePhone}?text=${checkoutMsg}`, '_blank');
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchStoreConfig();
+      fetchProductsFromBackend();
+    });
+  </script>
+</body>
+</html>
