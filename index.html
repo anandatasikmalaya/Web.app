@@ -682,10 +682,10 @@
       </div>
       <div class="menu-toggle" id="mobile-menu"><i class="fas fa-bars"></i></div>
       <ul class="nav-links" id="nav-list">
-        <li><a href="#" class="nav-item active" data-target="beranda">Beranda</a></li>
-        <li><a href="#" class="nav-item" data-target="produk">Layanan & Produk</a></li>
-        <li><a href="#" class="nav-item" data-target="tentang">Tentang Kami</a></li>
-        <li><a href="#" class="nav-item" data-target="kontak">Hubungi Kami</a></li>
+        <li><a href="#beranda" class="nav-item active" data-target="beranda">Beranda</a></li>
+        <li><a href="#produk" class="nav-item" data-target="produk">Layanan & Produk</a></li>
+        <li><a href="#tentang" class="nav-item" data-target="tentang">Tentang Kami</a></li>
+        <li><a href="#kontak" class="nav-item" data-target="kontak">Hubungi Kami</a></li>
       </ul>
     </nav>
   </header>
@@ -694,7 +694,7 @@
     <div class="hero">
       <h1>Selamat Datang di ANANDA TASIKMALAYA</h1>
       <p id="home-text-display">Pusat fashion & kebutuhan keluarga terlengkap di Tasikmalaya. Tampil gaya, elegan, dan nyaman setiap hari!</p>
-      <a href="#" class="btn-cta nav-item" data-target="produk">Belanja Sekarang</a>
+      <a href="#produk" class="btn-cta nav-item" data-target="produk">Belanja Sekarang</a>
     </div>
 
     <h2 class="section-title">Keunggulan Kami</h2>
@@ -939,21 +939,29 @@
 
     mobileMenu.addEventListener('click', () => navList.classList.toggle('show'));
 
+    // BUKA SECTION BERDASARKAN ID
+    function switchTab(targetId, updateHistory = true) {
+      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      const activeLink = document.querySelector(`.nav-links a[data-target="${targetId}"]`);
+      if (activeLink) activeLink.classList.add('active');
+
+      sections.forEach(sec => {
+        sec.classList.remove('active-section');
+        if (sec.id === targetId) sec.classList.add('active-section');
+      });
+
+      navList.classList.remove('show');
+
+      if (updateHistory) {
+        history.pushState(null, '', `#/${targetId}`);
+      }
+    }
+
     navItems.forEach(item => {
       item.addEventListener('click', (e) => {
         e.preventDefault();
         const targetId = item.getAttribute('data-target');
-
-        document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-        const activeLink = document.querySelector(`.nav-links a[data-target="${targetId}"]`);
-        if(activeLink) activeLink.classList.add('active');
-
-        sections.forEach(sec => {
-          sec.classList.remove('active-section');
-          if (sec.id === targetId) sec.classList.add('active-section');
-        });
-
-        navList.classList.remove('show');
+        switchTab(targetId);
         window.scrollTo(0, 0);
       });
     });
@@ -1022,6 +1030,9 @@
         });
 
         renderProducts();
+        
+        // CEK JIKA ADA PARAMETER DI URL SAAT DIBUKA PERTAMA KALI
+        checkInitialURL();
       } catch (err) {
         console.error(err);
         productsContainer.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:red; padding: 2rem;">Gagal terhubung ke Google Sheets.</p>';
@@ -1033,10 +1044,12 @@
       const product = products.find(p => p.id === productId);
       if (!product) return;
 
+      const productUrl = `${window.location.origin}${window.location.pathname}#/produk/${productId}`;
+
       const shareData = {
         title: product.name,
         text: `Cek produk ${product.name} (${product.price}) di Ananda Tasikmalaya!`,
-        url: window.location.href
+        url: productUrl
       };
 
       if (navigator.share) {
@@ -1106,8 +1119,8 @@
       document.getElementById('buy-wa').href = `https://wa.me/${storePhone}?text=${waText}`;
     }
 
-    function openModal(id) {
-      currentProduct = products.find(p => p.id === id);
+    function openModal(id, updateHistory = true) {
+      currentProduct = products.find(p => p.id == id);
       if (!currentProduct) return;
 
       currentImageIndex = 0;
@@ -1181,9 +1194,17 @@
 
       updateWaLink();
       modal.classList.add('active');
+
+      // Update URL saat modal produk dibuka
+      if (updateHistory) {
+        history.pushState(null, '', `#/produk/${id}`);
+      }
     }
 
-    closeModalBtn.addEventListener('click', () => modal.classList.remove('active'));
+    closeModalBtn.addEventListener('click', () => {
+      modal.classList.remove('active');
+      history.pushState(null, '', '#/produk');
+    });
 
     /* --- LOGIK FULLSCREEN FOTO PRODUK --- */
     const fullscreenModal = document.getElementById('fullscreen-modal');
@@ -1223,7 +1244,6 @@
       currentImageIndex = (currentImageIndex - 1 + currentProduct.images.length) % currentProduct.images.length;
       updateFullscreenImage();
       
-      // Sync thumbnail active di modal
       const mainImg = document.getElementById('modal-img');
       mainImg.src = currentProduct.images[currentImageIndex];
       const thumbs = document.querySelectorAll('.thumb-img');
@@ -1236,7 +1256,6 @@
       currentImageIndex = (currentImageIndex + 1) % currentProduct.images.length;
       updateFullscreenImage();
 
-      // Sync thumbnail active di modal
       const mainImg = document.getElementById('modal-img');
       mainImg.src = currentProduct.images[currentImageIndex];
       const thumbs = document.querySelectorAll('.thumb-img');
@@ -1340,6 +1359,31 @@
       let checkoutMsg = `Halo Ananda Tasikmalaya, saya ingin memesan barang berikut:%0A%0A${orderListText}%0A%0A*Total Pembayaran: Rp${grandTotal.toLocaleString('id-ID')}*%0A%0AMohon diproses, terima kasih!`;
 
       window.open(`https://wa.me/${storePhone}?text=${checkoutMsg}`, '_blank');
+    });
+
+    /* --- ROUTING URL DARI SHARED LINK --- */
+    function checkInitialURL() {
+      const hash = window.location.hash;
+      const urlParams = new URLSearchParams(window.location.search);
+      const paramProduk = urlParams.get('produk') || urlParams.get('id');
+
+      if (hash.startsWith('#/produk/')) {
+        const prodId = hash.split('/')[2];
+        switchTab('produk', false);
+        if (prodId) openModal(prodId, false);
+      } else if (hash.startsWith('#/')) {
+        const targetSec = hash.replace('#/', '');
+        if (['beranda', 'produk', 'tentang', 'kontak'].includes(targetSec)) {
+          switchTab(targetSec, false);
+        }
+      } else if (paramProduk) {
+        switchTab('produk', false);
+        openModal(paramProduk, false);
+      }
+    }
+
+    window.addEventListener('popstate', () => {
+      checkInitialURL();
     });
 
     document.addEventListener('DOMContentLoaded', () => {
