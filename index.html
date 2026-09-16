@@ -259,11 +259,35 @@
     .product-meta {
       display: flex;
       align-items: center;
-      gap: 4px;
+      justify-content: space-between;
       font-size: 0.7rem;
       color: var(--gray-text);
+      margin-top: 4px;
     }
-    .product-meta i { color: #ffc107; font-size: 0.65rem; }
+    .product-meta .rating-sold {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .product-meta i.fa-star { color: #ffc107; font-size: 0.65rem; }
+    
+    .btn-share-card {
+      background: #f0f0f0;
+      border: none;
+      color: var(--dark-text);
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-share-card:hover {
+      background: var(--primary-red);
+      color: white;
+    }
 
     /* MODAL DETAIL PRODUK & CART */
     .modal-overlay {
@@ -717,7 +741,9 @@
     <h2 class="section-title">Tentang Kami</h2>
     <div class="card-box">
       <p id="about-text-display">
-        <strong>ANANDA TASIKMALAYA</strong> hadir sebagai solusi belanja serba ada (one-stop shopping) untuk seluruh anggota keluarga Anda. Berawal dari komitmen memberikan produk fashion dan kebutuhan harian berkualitas tinggi, kami terus berkembang menghadirkan pilihan ragam produk dari pakaian kasual, sepatu trendi, aksesoris, hingga perlengkapan tidur dan bayi.
+        <strong>Ananda Tasikmalaya</strong> Hadir di Kota Tasikmalaya sejak tahun 2011 . Berkomitmen untuk terus menjadi warna baru dan destinasi utama belanja fashion Anda .
+        <br><br>
+        Menyediakan berbagai macam koleksi pakaian, perlengkapan harian, sepatu, sandal, tas, hingga aksesoris menarik untuk melengkapi penampilan sehari-hari mu. Mulai dari gaya santai hingga formal, Ananda Tasikmalaya adalah solusi tepat untuk selalu tampil percaya diri dan fashionable!
       </p>
 
       <div class="commit-title">Komitmen Kami Untuk Anda:</div>
@@ -942,7 +968,6 @@
         if (result.status === 'success' && result.data.length > 0) {
           const cfg = result.data.find(item => item.id == 1) || result.data[0];
           if (cfg.home_text) document.getElementById('home-text-display').textContent = cfg.home_text;
-          if (cfg.about_text) document.getElementById('about-text-display').textContent = cfg.about_text;
           if (cfg.contact_phone) {
             let phone = cfg.contact_phone.replace(/[^0-9]/g, '');
             if (phone.startsWith('0')) phone = '62' + phone.slice(1);
@@ -1003,6 +1028,25 @@
       }
     }
 
+    function shareProduct(event, productId) {
+      event.stopPropagation();
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+
+      const shareData = {
+        title: product.name,
+        text: `Cek produk ${product.name} (${product.price}) di Ananda Tasikmalaya!`,
+        url: window.location.href
+      };
+
+      if (navigator.share) {
+        navigator.share(shareData).catch((error) => console.log('Batal bagikan', error));
+      } else {
+        navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`);
+        alert('Tautan produk berhasil disalin ke papan klip!');
+      }
+    }
+
     function renderProducts() {
       const filtered = products.filter(p => {
         const matchesCategory = (currentCategory === 'all' || p.category === currentCategory);
@@ -1023,8 +1067,13 @@
             <div class="product-price">${p.price}</div>
             <span class="badge-promo"><i class="fas fa-thumbs-up"></i> Garansi Harga Terbaik</span>
             <div class="product-meta">
-              <i class="fas fa-star"></i>
-              <span>${p.rating}</span> | <span>${p.sold}</span>
+              <div class="rating-sold">
+                <i class="fas fa-star"></i>
+                <span>${p.rating}</span> | <span>${p.sold}</span>
+              </div>
+              <button class="btn-share-card" onclick="shareProduct(event, ${p.id})" title="Bagikan Produk">
+                <i class="fas fa-share-alt"></i>
+              </button>
             </div>
           </div>
         </div>
