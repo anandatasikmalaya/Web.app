@@ -1031,7 +1031,7 @@
 
         renderProducts();
         
-        // CEK JIKA ADA PARAMETER DI URL SAAT DIBUKA PERTAMA KALI
+        // CEK JIKA ADA PARAMETER ATAU HASH DI URL SAAT DIBUKA PERTAMA KALI
         checkInitialURL();
       } catch (err) {
         console.error(err);
@@ -1039,23 +1039,25 @@
       }
     }
 
+    // FUNGSI SHARE PRODUK (FORMAT DIBUAT DENGAN PARAMETER ?produk=ID AGAR TIDAK DIPOTONG WHATSAPP)
     function shareProduct(event, productId) {
       event.stopPropagation();
-      const product = products.find(p => p.id === productId);
+      const product = products.find(p => String(p.id) === String(productId));
       if (!product) return;
 
-      const productUrl = `${window.location.origin}${window.location.pathname}#/produk/${productId}`;
+      const baseUrl = window.location.origin + window.location.pathname;
+      const productUrl = `${baseUrl}?produk=${productId}`;
 
       const shareData = {
         title: product.name,
-        text: `Cek produk ${product.name} (${product.price}) di Ananda Tasikmalaya!`,
+        text: `Cek produk ${product.name} (${product.price}) di Ananda Tasikmalaya!\n${productUrl}`,
         url: productUrl
       };
 
       if (navigator.share) {
         navigator.share(shareData).catch((error) => console.log('Batal bagikan', error));
       } else {
-        navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`);
+        navigator.clipboard.writeText(`${shareData.text}`);
         alert('Tautan produk berhasil disalin ke papan klip!');
       }
     }
@@ -1073,7 +1075,7 @@
       }
 
       productsContainer.innerHTML = filtered.map(p => `
-        <div class="product-card" onclick="openModal(${p.id})">
+        <div class="product-card" onclick="openModal('${p.id}')">
           <img src="${p.images[0] || ''}" alt="${p.name}" class="product-img">
           <div class="product-info">
             <div class="product-title">${p.name}</div>
@@ -1084,7 +1086,7 @@
                 <i class="fas fa-star"></i>
                 <span>${p.rating}</span> | <span>${p.sold}</span>
               </div>
-              <button class="btn-share-card" onclick="shareProduct(event, ${p.id})" title="Bagikan Produk">
+              <button class="btn-share-card" onclick="shareProduct(event, '${p.id}')" title="Bagikan Produk">
                 <i class="fas fa-share-alt"></i>
               </button>
             </div>
@@ -1120,7 +1122,7 @@
     }
 
     function openModal(id, updateHistory = true) {
-      currentProduct = products.find(p => p.id == id);
+      currentProduct = products.find(p => String(p.id) === String(id));
       if (!currentProduct) return;
 
       currentImageIndex = 0;
@@ -1195,15 +1197,15 @@
       updateWaLink();
       modal.classList.add('active');
 
-      // Update URL saat modal produk dibuka
+      // Update URL menjadi ?produk=ID saat modal produk dibuka
       if (updateHistory) {
-        history.pushState(null, '', `#/produk/${id}`);
+        history.pushState(null, '', `?produk=${id}`);
       }
     }
 
     closeModalBtn.addEventListener('click', () => {
       modal.classList.remove('active');
-      history.pushState(null, '', '#/produk');
+      history.pushState(null, '', window.location.pathname + '#/produk');
     });
 
     /* --- LOGIK FULLSCREEN FOTO PRODUK --- */
@@ -1287,7 +1289,7 @@
         qty: 1
       };
 
-      const existingIndex = cart.findIndex(item => item.id === cartItem.id && item.size === cartItem.size && item.color === cartItem.color);
+      const existingIndex = cart.findIndex(item => String(item.id) === String(cartItem.id) && item.size === cartItem.size && item.color === cartItem.color);
       if (existingIndex > -1) {
         cart[existingIndex].qty += 1;
       } else {
@@ -1361,13 +1363,19 @@
       window.open(`https://wa.me/${storePhone}?text=${checkoutMsg}`, '_blank');
     });
 
-    /* --- ROUTING URL DARI SHARED LINK --- */
+    /* --- ROUTING URL DARI SHARED LINK DENGAN PENANGATAN QUERY PARAMETER --- */
     function checkInitialURL() {
-      const hash = window.location.hash;
       const urlParams = new URLSearchParams(window.location.search);
       const paramProduk = urlParams.get('produk') || urlParams.get('id');
+      const hash = window.location.hash;
 
-      if (hash.startsWith('#/produk/')) {
+      if (paramProduk && products.length > 0) {
+        switchTab('produk', false);
+        const targetProduct = products.find(p => String(p.id) === String(paramProduk));
+        if (targetProduct) {
+          openModal(targetProduct.id, false);
+        }
+      } else if (hash.startsWith('#/produk/')) {
         const prodId = hash.split('/')[2];
         switchTab('produk', false);
         if (prodId) openModal(prodId, false);
@@ -1376,15 +1384,10 @@
         if (['beranda', 'produk', 'tentang', 'kontak'].includes(targetSec)) {
           switchTab(targetSec, false);
         }
-      } else if (paramProduk) {
-        switchTab('produk', false);
-        openModal(paramProduk, false);
       }
     }
 
-    window.addEventListener('popstate', () => {
-      checkInitialURL();
-    });
+    window.addEventListener('popstate', checkInitialURL);
 
     document.addEventListener('DOMContentLoaded', () => {
       fetchStoreConfig();
