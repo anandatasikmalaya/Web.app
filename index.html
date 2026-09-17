@@ -1031,7 +1031,7 @@
 
         renderProducts();
         
-        // CEK JIKA ADA PARAMETER ATAU HASH DI URL SAAT DIBUKA PERTAMA KALI
+        // Cek URL lagi jika data produk telah selesai di-load untuk membuka modal produk tertentu jika ada parameter/hash
         checkInitialURL();
       } catch (err) {
         console.error(err);
@@ -1197,7 +1197,6 @@
       updateWaLink();
       modal.classList.add('active');
 
-      // Update URL menjadi ?produk=ID saat modal produk dibuka
       if (updateHistory) {
         history.pushState(null, '', `?produk=${id}`);
       }
@@ -1206,6 +1205,7 @@
     closeModalBtn.addEventListener('click', () => {
       modal.classList.remove('active');
       history.pushState(null, '', window.location.pathname + '#/produk');
+      switchTab('produk', false);
     });
 
     /* --- LOGIK FULLSCREEN FOTO PRODUK --- */
@@ -1363,24 +1363,35 @@
       window.open(`https://wa.me/${storePhone}?text=${checkoutMsg}`, '_blank');
     });
 
-    /* --- ROUTING URL DARI SHARED LINK DENGAN PENANGATAN QUERY PARAMETER --- */
+    /* --- ROUTING URL DARI SHARED LINK DENGAN PENANGANAN LENGKAP --- */
     function checkInitialURL() {
       const urlParams = new URLSearchParams(window.location.search);
       const paramProduk = urlParams.get('produk') || urlParams.get('id');
       const hash = window.location.hash;
 
-      if (paramProduk && products.length > 0) {
+      if (paramProduk) {
         switchTab('produk', false);
-        const targetProduct = products.find(p => String(p.id) === String(paramProduk));
-        if (targetProduct) {
-          openModal(targetProduct.id, false);
+        if (products.length > 0) {
+          const targetProduct = products.find(p => String(p.id) === String(paramProduk));
+          if (targetProduct) {
+            openModal(targetProduct.id, false);
+          }
         }
       } else if (hash.startsWith('#/produk/')) {
         const prodId = hash.split('/')[2];
         switchTab('produk', false);
-        if (prodId) openModal(prodId, false);
+        if (prodId && products.length > 0) {
+          openModal(prodId, false);
+        }
+      } else if (hash.includes('produk') || hash === '#/produk' || hash === '#produk') {
+        switchTab('produk', false);
       } else if (hash.startsWith('#/')) {
         const targetSec = hash.replace('#/', '');
+        if (['beranda', 'produk', 'tentang', 'kontak'].includes(targetSec)) {
+          switchTab(targetSec, false);
+        }
+      } else if (hash.startsWith('#')) {
+        const targetSec = hash.replace('#', '');
         if (['beranda', 'produk', 'tentang', 'kontak'].includes(targetSec)) {
           switchTab(targetSec, false);
         }
@@ -1388,8 +1399,13 @@
     }
 
     window.addEventListener('popstate', checkInitialURL);
+    window.addEventListener('hashchange', checkInitialURL);
 
     document.addEventListener('DOMContentLoaded', () => {
+      // 1. Eksekusi routing di awal agar halaman Layanan & Produk terbuka langsung jika link berisi #/produk
+      checkInitialURL();
+
+      // 2. Load data konfigurasi & produk dari backend
       fetchStoreConfig();
       fetchProductsFromBackend();
     });
