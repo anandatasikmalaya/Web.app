@@ -1,398 +1,715 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ananda Tasikmalaya - Katalog Produk</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    body {
-      background-color: #f4f6f8;
-      color: #333;
-    }
-    header {
-      background-color: #ffffff;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #2c3e50;
-    }
-    .nav-list {
-      display: flex;
-      list-style: none;
-      gap: 1.5rem;
-    }
-    .nav-item a {
-      text-decoration: none;
-      color: #555;
-      font-weight: 500;
-    }
-    .mobile-menu {
-      display: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-    .container {
-      max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
-    .search-filter-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: space-between;
-      margin-bottom: 2rem;
-    }
-    .search-box {
-      flex: 1;
-      min-width: 250px;
-      position: relative;
-    }
-    .search-box input {
-      width: 100%;
-      padding: 0.75rem 1rem 0.75rem 2.5rem;
-      border: 1px solid #ccc;
-      border-radius: 25px;
-      outline: none;
-    }
-    .search-box i {
-      position: absolute;
-      left: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #888;
-    }
-    .filter-group {
-      display: flex;
-      gap: 0.5rem;
-      overflow-x: auto;
-      padding-bottom: 0.5rem;
-    }
-    .filter-btn {
-      padding: 0.5rem 1.2rem;
-      border: 1px solid #007bff;
-      background: #fff;
-      color: #007bff;
-      border-radius: 20px;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .filter-btn.active, .filter-btn:hover {
-      background: #007bff;
-      color: #fff;
-    }
-    .products-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 1.5rem;
-    }
-    .product-card {
-      background: #fff;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      transition: transform 0.2s;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-    }
-    .product-card:hover {
-      transform: translateY(-4px);
-    }
-    .product-img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-    }
-    .product-info {
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
-    .product-title {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: #2c3e50;
-    }
-    .product-price {
-      font-size: 1.1rem;
-      color: #e74c3c;
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-    }
-    .product-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: auto;
-      font-size: 0.85rem;
-      color: #777;
-    }
-    .btn-share-card {
-      background: none;
-      border: none;
-      color: #007bff;
-      cursor: pointer;
-    }
-    /* Modal Detail Produk */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-    }
-    .modal.active {
-      display: flex;
-    }
-    .modal-content {
-      background: #fff;
-      border-radius: 8px;
-      width: 90%;
-      max-width: 500px;
-      padding: 1.5rem;
-      position: relative;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    .close-btn {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-    .modal-img {
-      width: 100%;
-      max-height: 250px;
-      object-fit: cover;
-      border-radius: 6px;
-      margin-bottom: 1rem;
-    }
-    .btn-wa {
-      display: block;
-      width: 100%;
-      text-align: center;
-      background: #25d366;
-      color: #fff;
-      padding: 0.75rem;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: bold;
-      margin-top: 1rem;
-    }
-    @media (max-width: 768px) {
-      .mobile-menu { display: block; }
-      .nav-list {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        background: #fff;
-        padding: 1rem;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      }
-      .nav-list.show { display: flex; }
-    }
-  </style>
-</head>
-<body>
-
-  <header>
-    <div class="navbar">
-      <div class="logo">Ananda Tasikmalaya</div>
-      <div class="mobile-menu" id="mobile-menu"><i class="fas fa-bars"></i></div>
-      <ul class="nav-list" id="nav-list">
-        <li class="nav-item"><a href="#">Beranda</a></li>
-        <li class="nav-item"><a href="#">Katalog</a></li>
-        <li class="nav-item"><a href="#">Kontak</a></li>
-      </ul>
-    </div>
-  </header>
-
-  <main class="container">
-    <div class="search-filter-bar">
-      <div class="search-box">
-        <i class="fas fa-search"></i>
-        <input type="text" id="search-input" placeholder="Cari produk...">
-      </div>
-      <div class="filter-group">
-        <button class="filter-btn active" data-filter="all">Semua</button>
-        <button class="filter-btn" data-filter="pakaian">Pakaian</button>
-        <button class="filter-btn" data-filter="makanan">Makanan</button>
-        <button class="filter-btn" data-filter="aksesoris">Aksesoris</button>
-      </div>
-    </div>
-
-    <div class="products-grid" id="products-container">
-      <!-- Produk akan dimuat dari Google Sheets -->
-    </div>
-  </main>
-
-  <!-- Modal Detail Produk -->
-  <div class="modal" id="product-modal">
-    <div class="modal-content">
-      <span class="close-btn" id="close-modal">&times;</span>
-      <img src="" id="modal-img" class="modal-img" alt="Detail Produk">
-      <h3 id="modal-title"></h3>
-      <p id="modal-price" class="product-price"></p>
-      <p id="modal-desc" style="color: #666; margin-top: 0.5rem;"></p>
-      <a href="#" id="buy-wa" target="_blank" class="btn-wa">
-        <i class="fab fa-whatsapp"></i> Beli via WhatsApp
-      </a>
-    </div>
-  </div>
-
-  <script>
-    // URL Google Apps Script Web App terbaru
-    const GS_API_URL = 'https://script.google.com/macros/s/AKfycbwSQ52wmWNbGO1y-vA1cOsKYJXfckSR5kN2KA3pr9aFtn80plKzR-4eKH2RDDtQ2djx/exec';
-
-    let products = [];
-    let currentCategory = 'all';
-    let searchQuery = '';
-    let storePhone = '6285624670796';
-
-    const navList = document.getElementById('nav-list');
-    const mobileMenu = document.getElementById('mobile-menu');
-
-    if (mobileMenu) {
-      mobileMenu.addEventListener('click', () => navList.classList.toggle('show'));
-    }
-
-    // Fungsi Ambil Data dari Apps Script
-    async function fetchProducts() {
-      const container = document.getElementById('products-container');
-      container.innerHTML = '<p style="text-align:center; grid-column: 1/-1; padding: 2rem;">Memuat produk...</p>';
-      
-      try {
-        const res = await fetch(`${GS_API_URL}?action=read&sheet=products`);
-        const response = await res.json();
-        
-        if (response && response.status === 'success') {
-          products = response.data;
-          renderProducts();
-        } else {
-          container.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color:red;">Gagal memuat data produk.</p>';
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANANDA TASIKMALAYA - Store</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Font CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            red: '#E53935',
+                            darkred: '#C62828',
+                            black: '#212121',
+                            graybg: '#F4F5F7'
+                        }
+                    }
+                }
+            }
         }
-      } catch (err) {
-        console.error('Fetch error:', err);
-        container.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color:red;">Terjadi kesalahan koneksi ke database.</p>';
-      }
-    }
+    </script>
+    <style>
+        /* Custom scrollbar styling for categories */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-brand-graybg text-gray-800 font-sans pb-20 md:pb-0 relative min-h-screen">
 
-    // Fungsi Render Tampilan Produk
-    function renderProducts() {
-      const container = document.getElementById('products-container');
-      container.innerHTML = '';
-
-      const filtered = products.filter(p => {
-        const matchCategory = currentCategory === 'all' || (p.category && p.category.toLowerCase() === currentCategory.toLowerCase());
-        const matchSearch = !searchQuery || (p.title && p.title.toLowerCase().includes(searchQuery.toLowerCase()));
-        return matchCategory && matchSearch;
-      });
-
-      if (filtered.length === 0) {
-        container.innerHTML = '<p style="text-align:center; grid-column: 1/-1; padding: 2rem;">Produk tidak ditemukan.</p>';
-        return;
-      }
-
-      filtered.forEach(p => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.onclick = () => openModal(p);
-
-        const priceFormatted = Number(p.price || 0).toLocaleString('id-ID');
-        const imgUrl = p.image || 'https://via.placeholder.com/300?text=No+Image';
-
-        card.innerHTML = `
-          <img src="${imgUrl}" class="product-img" alt="${p.title}">
-          <div class="product-info">
-            <div class="product-title">${p.title}</div>
-            <div class="product-price">Rp${priceFormatted}</div>
-            <div class="product-meta">
-              <span class="rating-sold"><i class="fas fa-star" style="color:#f39c12;"></i> 5.0</span>
-              <button class="btn-share-card" onclick="event.stopPropagation(); shareProduct('${p.title}')"><i class="fas fa-share-alt"></i></button>
+    <!-- Navbar -->
+    <nav class="bg-brand-red text-white sticky top-0 z-40 shadow-md">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="showPage('home')">
+                <span class="bg-white text-brand-red font-black px-2 py-0.5 rounded text-lg">A</span>
+                <span class="font-bold text-lg tracking-wide">ANANDA TASIKMALAYA</span>
             </div>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
+            
+            <!-- Desktop Nav Links & Cart -->
+            <div class="flex items-center space-x-6 text-sm font-medium">
+                <div class="hidden md:flex space-x-6">
+                    <button onclick="showPage('home')" class="hover:text-gray-200 transition">Beranda</button>
+                    <button onclick="showPage('catalog')" class="hover:text-gray-200 transition">Katalog</button>
+                    <button onclick="showPage('about')" class="hover:text-gray-200 transition">Tentang Kami</button>
+                    <button onclick="showPage('contact')" class="hover:text-gray-200 transition">Kontak</button>
+                </div>
+                <!-- Cart Icon Button -->
+                <button onclick="openCartModal()" class="relative bg-white/20 hover:bg-white/30 p-2.5 rounded-full transition flex items-center justify-center">
+                    <i class="fa-solid fa-cart-shopping text-base text-white"></i>
+                    <span id="cart-badge" class="absolute -top-1 -right-1 bg-yellow-400 text-black text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
 
-    // Filter Kategori Event Listener
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        currentCategory = e.target.getAttribute('data-filter');
-        renderProducts();
-      });
-    });
+    <!-- Main Content Container -->
+    <main class="max-w-6xl mx-auto px-4 py-6">
 
-    // Pencarian Event Listener
-    const searchInput = document.getElementById('search-input');
-    if (searchInput) {
-      searchInput.addEventListener('input', (e) => {
-        searchQuery = e.target.value;
-        renderProducts();
-      });
-    }
+        <!-- PAGE 1: HOME -->
+        <section id="page-home" class="space-y-8">
+            <!-- Hero Banner -->
+            <div class="bg-gradient-to-r from-brand-red to-brand-darkred text-white rounded-2xl p-6 md:p-10 shadow-lg relative overflow-hidden">
+                <div class="relative z-10 max-w-xl">
+                    <span class="bg-white/20 text-xs px-3 py-1 rounded-full uppercase tracking-wider font-semibold">Pusat Fashion Keluarga</span>
+                    <h1 class="text-2xl md:text-4xl font-extrabold mt-2 mb-3 leading-tight" id="home-welcome-text">Selamat Datang di ANANDA TASIKMALAYA</h1>
+                    <p class="text-sm md:text-base text-red-100 mb-6">Temukan berbagai koleksi pakaian & kebutuhan harian terlengkap berkualitas dengan harga terbaik.</p>
+                    <button onclick="showPage('catalog')" class="bg-white text-brand-red font-bold px-6 py-3 rounded-xl shadow hover:bg-gray-100 transition inline-flex items-center gap-2 text-sm md:text-base">
+                        <i class="fa-solid fa-shopping-bag"></i> Belanja Sekarang
+                    </button>
+                </div>
+            </div>
 
-    // Buka Modal Detail
-    function openModal(product) {
-      document.getElementById('modal-title').innerText = product.title;
-      document.getElementById('modal-price').innerText = 'Rp' + Number(product.price || 0).toLocaleString('id-ID');
-      document.getElementById('modal-img').src = product.image || 'https://via.placeholder.com/300';
-      document.getElementById('modal-desc').innerText = product.description || 'Tidak ada deskripsi.';
-      
-      document.getElementById('buy-wa').href = `https://wa.me/${storePhone}?text=Halo%20Ananda%20Tasikmalaya,%20saya%20tertarik%20dengan%20produk%20${encodeURIComponent(product.title)}`;
-      
-      document.getElementById('product-modal').classList.add('active');
-    }
+            <!-- Categories Quick Navigation -->
+            <div>
+                <h2 class="text-lg font-bold mb-4 text-gray-800 flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-brand-red"></i> Kategori Pilihan
+                </h2>
+                <div class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-2.5">
+                    <button onclick="filterCategory('Fashion Pria')" class="bg-white p-3 rounded-xl shadow-sm hover:shadow-md transition flex flex-col items-center text-center border border-gray-100">
+                        <i class="fa-solid fa-user-tie text-xl text-brand-red mb-1.5"></i>
+                        <span class="text-xs font-semibold leading-tight text-gray-700">Fashion Pria</span>
+                    </button>
+                    <button onclick="filterCategory('Fashion Wanita')" class="bg-white p-3 rounded-xl shadow-sm hover:shadow-md transition flex flex-col items-center text-center border border-gray-100">
+                        <i class="fa-solid fa-person-dress text-xl text-brand-red mb-1.5"></i>
+                        <span class="text-xs font-semibold leading-tight text-gray-700">Fashion Wanita</span>
+                    </button>
+                    <button onclick="filterCategory('Fashion Anak')" class="bg-white p-3 rounded-xl shadow-sm hover:shadow-md transition flex flex-col items-center text-center border border-gray-100">
+                        <i class="fa-solid fa-child text-xl text-brand-red mb-1.5"></i>
+                        <span class="text-xs font-semibold leading-tight text-gray-700">Fashion Anak</span>
+                    </button>
+                    <button onclick="filterCategory('Perlengkapan Tidur')" class="bg-white p-3 rounded-xl shadow-sm hover:shadow-md transition flex flex-col items-center text-center border border-gray-100">
+                        <i class="fa-solid fa-bed text-xl text-brand-red mb-1.5"></i>
+                        <span class="text-xs font-semibold leading-tight text-gray-700">Perlengkapan Tidur</span>
+                    </button>
+                    <button onclick="filterCategory('Perlengkapan Muslim')" class="bg-white p-3 rounded-xl shadow-sm hover:shadow-md transition flex flex-col items-center text-center border border-gray-100">
+                        <i class="fa-solid fa-kaaba text-xl text-brand-red mb-1.5"></i>
+                        <span class="text-xs font-semibold leading-tight text-gray-700">Perlengkapan Muslim</span>
+                    </button>
+                    <button onclick="filterCategory('Perlengkapan Sekolah')" class="bg-white p-3 rounded-xl shadow-sm hover:shadow-md transition flex flex-col items-center text-center border border-gray-100">
+                        <i class="fa-solid fa-graduation-cap text-xl text-brand-red mb-1.5"></i>
+                        <span class="text-xs font-semibold leading-tight text-gray-700">Perlengkapan Sekolah</span>
+                    </button>
+                    <button onclick="filterCategory('Perlengkapan Bayi')" class="bg-white p-3 rounded-xl shadow-sm hover:shadow-md transition flex flex-col items-center text-center border border-gray-100">
+                        <i class="fa-solid fa-baby text-xl text-brand-red mb-1.5"></i>
+                        <span class="text-xs font-semibold leading-tight text-gray-700">Perlengkapan Bayi</span>
+                    </button>
+                    <button onclick="filterCategory('Aksesoris')" class="bg-white p-3 rounded-xl shadow-sm hover:shadow-md transition flex flex-col items-center text-center border border-gray-100">
+                        <i class="fa-solid fa-gem text-xl text-brand-red mb-1.5"></i>
+                        <span class="text-xs font-semibold leading-tight text-gray-700">Aksesoris</span>
+                    </button>
+                    <button onclick="filterCategory('Sepatu & Tas')" class="bg-white p-3 rounded-xl shadow-sm hover:shadow-md transition flex flex-col items-center text-center border border-gray-100">
+                        <i class="fa-solid fa-shoe-prints text-xl text-brand-red mb-1.5"></i>
+                        <span class="text-xs font-semibold leading-tight text-gray-700">Sepatu & Tas</span>
+                    </button>
+                </div>
+            </div>
 
-    // Tutup Modal
-    document.getElementById('close-modal').addEventListener('click', () => {
-      document.getElementById('product-modal').classList.remove('active');
-    });
+            <!-- KEUNGGULAN KAMI SECTION (Matching Mockup Screenshot) -->
+            <div class="pt-2">
+                <h2 class="text-xl md:text-2xl font-bold text-center text-brand-red mb-6 tracking-wide">
+                    Keunggulan Kami
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <!-- Feature Card 1: Harga Terbaik -->
+                    <div class="bg-white rounded-2xl p-6 text-center shadow-md border-t-4 border-brand-red flex flex-col items-center transition hover:-translate-y-1 duration-200">
+                        <div class="w-14 h-14 bg-red-50 text-brand-red rounded-full flex items-center justify-center text-2xl mb-4 shadow-sm">
+                            <i class="fa-solid fa-tags"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Harga Terbaik</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed max-w-xs">
+                            Kualitas produk pilihan dengan harga ramah di kantong.
+                        </p>
+                    </div>
 
-    // Bagikan Produk
-    function shareProduct(title) {
-      if (navigator.share) {
-        navigator.share({ title: title, url: window.location.href });
-      } else {
-        alert('Link disalin ke clipboard!');
-      }
-    }
+                    <!-- Feature Card 2: Koleksi Lengkap -->
+                    <div class="bg-white rounded-2xl p-6 text-center shadow-md border-t-4 border-brand-red flex flex-col items-center transition hover:-translate-y-1 duration-200">
+                        <div class="w-14 h-14 bg-red-50 text-brand-red rounded-full flex items-center justify-center text-2xl mb-4 shadow-sm">
+                            <i class="fa-solid fa-boxes-packing"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Koleksi Lengkap</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed max-w-xs">
+                            Pakaian, sepatu, perlengkapan bayi, sekolah, hingga muslim.
+                        </p>
+                    </div>
 
-    // Panggil Data Pertama Kali saat Halaman Selesai Dimuat
-    window.addEventListener('DOMContentLoaded', fetchProducts);
-  </script>
+                    <!-- Feature Card 3: Kemudahan Belanja -->
+                    <div class="bg-white rounded-2xl p-6 text-center shadow-md border-t-4 border-brand-red flex flex-col items-center transition hover:-translate-y-1 duration-200">
+                        <div class="w-14 h-14 bg-red-50 text-brand-red rounded-full flex items-center justify-center text-2xl mb-4 shadow-sm">
+                            <i class="fa-solid fa-store"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Kemudahan Belanja</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed max-w-xs">
+                            Bisa pesan fleksibel lewat WhatsApp / Marketplace kesayangan Anda.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Products -->
+            <div class="pt-2">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                        <i class="fa-solid fa-fire text-brand-red"></i> Produk Terbaru
+                    </h2>
+                    <button onclick="showPage('catalog')" class="text-brand-red text-sm font-semibold hover:underline flex items-center gap-1">
+                        Lihat Semua <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+                <div id="home-products-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <!-- Dynamic Product Cards -->
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 2: CATALOG -->
+        <section id="page-catalog" class="hidden space-y-6">
+            <!-- Search & Filter Bar -->
+            <div class="bg-white p-4 rounded-xl shadow-sm space-y-3">
+                <div class="relative">
+                    <input type="text" id="search-input" oninput="applyFilters()" placeholder="Cari nama produk..." class="w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-brand-red outline-none">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-gray-400"></i>
+                </div>
+                
+                <!-- Category Pills (Horizontal Scroll) -->
+                <div class="flex gap-2 overflow-x-auto pb-1 text-sm no-scrollbar" id="category-pills">
+                    <button onclick="filterCategory('Semua')" class="cat-pill px-4 py-1.5 rounded-full border bg-brand-red text-white whitespace-nowrap font-medium text-xs">Semua</button>
+                    <button onclick="filterCategory('Fashion Pria')" class="cat-pill px-4 py-1.5 rounded-full border bg-gray-100 text-gray-700 whitespace-nowrap font-medium text-xs">Fashion Pria</button>
+                    <button onclick="filterCategory('Fashion Wanita')" class="cat-pill px-4 py-1.5 rounded-full border bg-gray-100 text-gray-700 whitespace-nowrap font-medium text-xs">Fashion Wanita</button>
+                    <button onclick="filterCategory('Fashion Anak')" class="cat-pill px-4 py-1.5 rounded-full border bg-gray-100 text-gray-700 whitespace-nowrap font-medium text-xs">Fashion Anak</button>
+                    <button onclick="filterCategory('Perlengkapan Tidur')" class="cat-pill px-4 py-1.5 rounded-full border bg-gray-100 text-gray-700 whitespace-nowrap font-medium text-xs">Perlengkapan Tidur</button>
+                    <button onclick="filterCategory('Perlengkapan Muslim')" class="cat-pill px-4 py-1.5 rounded-full border bg-gray-100 text-gray-700 whitespace-nowrap font-medium text-xs">Perlengkapan Muslim</button>
+                    <button onclick="filterCategory('Perlengkapan Sekolah')" class="cat-pill px-4 py-1.5 rounded-full border bg-gray-100 text-gray-700 whitespace-nowrap font-medium text-xs">Perlengkapan Sekolah</button>
+                    <button onclick="filterCategory('Perlengkapan Bayi')" class="cat-pill px-4 py-1.5 rounded-full border bg-gray-100 text-gray-700 whitespace-nowrap font-medium text-xs">Perlengkapan Bayi</button>
+                    <button onclick="filterCategory('Aksesoris')" class="cat-pill px-4 py-1.5 rounded-full border bg-gray-100 text-gray-700 whitespace-nowrap font-medium text-xs">Aksesoris</button>
+                    <button onclick="filterCategory('Sepatu & Tas')" class="cat-pill px-4 py-1.5 rounded-full border bg-gray-100 text-gray-700 whitespace-nowrap font-medium text-xs">Sepatu & Tas</button>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div id="catalog-products-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- Dynamic Products -->
+            </div>
+        </section>
+
+        <!-- PAGE 3: ABOUT -->
+        <section id="page-about" class="hidden">
+            <div class="bg-white p-6 md:p-10 rounded-2xl shadow-sm max-w-3xl mx-auto space-y-6">
+                <div class="text-center pb-4 border-b">
+                    <span class="text-brand-red font-bold text-xs uppercase tracking-widest">Profil Toko</span>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900 mt-1">Tentang ANANDA TASIKMALAYA</h2>
+                </div>
+                
+                <div id="about-content-text" class="text-gray-700 leading-relaxed text-sm md:text-base space-y-4 whitespace-pre-line text-justify">
+                    Ananda Tasikmalaya Hadir di Kota Tasikmalaya sejak tahun 2011 . Berkomitmen untuk terus menjadi warna baru dan destinasi utama belanja fashion Anda .
+
+Menyediakan berbagai macam koleksi pakaian, perlengkapan harian, sepatu, sandal, tas, hingga aksesoris menarik untuk melengkapi penampilan sehari-hari mu. Mulai dari gaya santai hingga formal, Ananda Tasikmalaya adalah solusi tepat untuk selalu tampil percaya diri dan fashionable!
+                </div>
+
+                <div class="pt-6 border-t grid grid-cols-2 gap-4 text-center">
+                    <div class="p-4 bg-gray-50 rounded-xl">
+                        <span class="block text-2xl font-black text-brand-red">2011</span>
+                        <span class="text-xs text-gray-500 font-semibold">Tahun Berdiri</span>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-xl">
+                        <span class="block text-2xl font-black text-brand-red">100%</span>
+                        <span class="text-xs text-gray-500 font-semibold">Produk Berkualitas</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 4: CONTACT -->
+        <section id="page-contact" class="hidden space-y-6">
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm max-w-3xl mx-auto text-center space-y-6">
+                <div class="w-12 h-12 bg-gray-100 text-gray-800 rounded-full flex items-center justify-center mx-auto text-xl shadow-inner border border-gray-200">
+                    <i class="fa-solid fa-headset"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-gray-900 tracking-tight">Hubungi Kami</h2>
+                    <p class="text-gray-500 text-xs mt-1">Terhubung dengan layanan pelanggan & media sosial resmi kami.</p>
+                </div>
+
+                <!-- Media Sosial & Email Buttons -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 max-w-xl mx-auto pt-1">
+                    <a id="btn-instagram" href="https://www.instagram.com/anandashop_official.tasik?stkn=bnM5MXNmaWJpMDRk" target="_blank" class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg border border-gray-800 bg-black text-white hover:bg-gray-800 transition duration-200 text-xs font-medium shadow-sm">
+                        <i class="fa-brands fa-instagram text-sm"></i> Instagram
+                    </a>
+                    <a id="btn-facebook" href="https://www.facebook.com/share/1HB2bxenLK/" target="_blank" class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg border border-gray-800 bg-black text-white hover:bg-gray-800 transition duration-200 text-xs font-medium shadow-sm">
+                        <i class="fa-brands fa-facebook-f text-sm"></i> Facebook
+                    </a>
+                    <a id="btn-tiktok" href="https://www.tiktok.com/@ananda_tasikmalaya?_r=1&_t=ZS-99nvpyeCa6a" target="_blank" class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg border border-gray-800 bg-black text-white hover:bg-gray-800 transition duration-200 text-xs font-medium shadow-sm">
+                        <i class="fa-brands fa-tiktok text-sm"></i> TikTok
+                    </a>
+                    <a id="btn-email" href="mailto:anandatasikmalaya@gmail.com" target="_blank" class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg border border-gray-800 bg-black text-white hover:bg-gray-800 transition duration-200 text-xs font-medium shadow-sm">
+                        <i class="fa-regular fa-envelope text-sm"></i> Email
+                    </a>
+                </div>
+
+                <!-- Google Maps Section -->
+                <div class="border-t pt-6 text-left space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                            <i class="fa-solid fa-location-dot text-gray-800"></i> Lokasi Toko Kami
+                        </h3>
+                        <a href="https://maps.app.goo.gl/z7JsZ1FoqiWhTW3T8" target="_blank" class="text-xs font-semibold text-gray-700 hover:text-black hover:underline flex items-center gap-1">
+                            Buka di Google Maps <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+                    </div>
+                    <div class="w-full h-64 rounded-xl overflow-hidden shadow-inner border border-gray-200 relative bg-gray-50">
+                        <iframe id="gmaps-iframe" src="https://maps.google.com/maps?q=ANANDA+TASIKMALAYA&t=&z=16&ie=UTF8&iwloc=&output=embed" class="w-full h-full border-0" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Floating WhatsApp Button -->
+    <a id="btn-wa-floating" href="https://wa.me/6285624670796?text=Halo%20ANANDA%20TASIKMALAYA,%20saya%20ingin%20bertanya%20mengenai%20produk." target="_blank" class="fixed bottom-20 md:bottom-6 right-5 bg-green-500 hover:bg-green-600 text-white p-3.5 rounded-full shadow-2xl z-40 flex items-center justify-center group transition-all duration-300">
+        <i class="fa-brands fa-whatsapp text-2xl"></i>
+        <span class="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-500 ease-in-out text-xs font-bold pl-0 group-hover:pl-2">Chat WhatsApp</span>
+    </a>
+
+    <!-- Product Detail Modal -->
+    <div id="detail-modal" class="fixed inset-0 bg-black/60 hidden items-center justify-center p-4 z-50 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full my-8 overflow-hidden relative">
+            <button onclick="closeDetailModal()" class="absolute top-3 right-3 bg-white/80 hover:bg-white text-gray-800 w-8 h-8 rounded-full flex items-center justify-center z-10 shadow">
+                &times;
+            </button>
+            <div id="detail-modal-body" class="p-6">
+                <!-- Dynamic Content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Fullscreen Image View Modal -->
+    <div id="fullscreen-modal" class="fixed inset-0 bg-black/90 hidden items-center justify-center z-50 p-4" onclick="closeFullscreenImage()">
+        <button onclick="closeFullscreenImage()" class="absolute top-4 right-4 text-white text-3xl font-bold hover:text-gray-300">&times;</button>
+        <img id="fullscreen-img" src="" class="max-w-full max-h-full object-contain rounded-lg">
+    </div>
+
+    <!-- Shopping Cart Modal Drawer -->
+    <div id="cart-modal" class="fixed inset-0 bg-black/60 hidden justify-end z-50">
+        <div class="bg-white w-full max-w-md h-full flex flex-col shadow-2xl">
+            <div class="p-4 bg-brand-red text-white flex justify-between items-center">
+                <h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-cart-shopping"></i> Keranjang Belanja</h3>
+                <button onclick="closeCartModal()" class="text-xl font-bold hover:text-gray-200">&times;</button>
+            </div>
+            
+            <div id="cart-items-container" class="p-4 flex-1 overflow-y-auto space-y-4">
+                <!-- Dynamic Cart Items -->
+            </div>
+
+            <div class="p-4 border-t bg-gray-50 space-y-3">
+                <div class="flex justify-between font-bold text-lg">
+                    <span>Total:</span>
+                    <span id="cart-total-price" class="text-brand-red">Rp 0</span>
+                </div>
+                <button onclick="checkoutWhatsApp()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 shadow">
+                    <i class="fa-brands fa-whatsapp text-xl"></i> Checkout via WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2 md:hidden z-40">
+        <button onclick="showPage('home')" class="flex flex-col items-center text-xs font-medium text-gray-600 focus:text-brand-red">
+            <i class="fa-solid fa-house text-lg"></i> Beranda
+        </button>
+        <button onclick="showPage('catalog')" class="flex flex-col items-center text-xs font-medium text-gray-600 focus:text-brand-red">
+            <i class="fa-solid fa-store text-lg"></i> Katalog
+        </button>
+        <button onclick="showPage('about')" class="flex flex-col items-center text-xs font-medium text-gray-600 focus:text-brand-red">
+            <i class="fa-solid fa-circle-info text-lg"></i> Tentang
+        </button>
+        <button onclick="showPage('contact')" class="flex flex-col items-center text-xs font-medium text-gray-600 focus:text-brand-red">
+            <i class="fa-solid fa-phone text-lg"></i> Kontak
+        </button>
+    </div>
+
+    <!-- JS Logic -->
+    <script>
+        // URL WEB APP GOOGLE APPS SCRIPT
+        const GS_API_URL = 'https://script.google.com/macros/s/AKfycbxilRVih4UTW22ptnHwVhM-KG08czWLDaW0xBBNNOENluH_Gs7-0jdEnZZ-R-OWG3bb/exec';
+
+        // CONTACT CONFIG DEFAULTS
+        const CONTACT_WA = '6285624670796';
+        const CONTACT_EMAIL = 'anandatasikmalaya@gmail.com';
+
+        let productsList = [];
+        let configData = {};
+        let activeCategory = 'Semua';
+        let cart = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchProducts();
+            fetchConfig();
+        });
+
+        function showPage(pageId) {
+            ['home', 'catalog', 'about', 'contact'].forEach(p => {
+                document.getElementById(`page-${p}`).classList.add('hidden');
+            });
+            document.getElementById(`page-${pageId}`).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async function fetchProducts() {
+            try {
+                const res = await fetch(`${GS_API_URL}?action=read&sheet=products`);
+                const json = await res.json();
+                if (json.status === 'success') {
+                    productsList = json.data;
+                    renderProducts();
+                }
+            } catch (e) {
+                console.error("Gagal mengambil produk:", e);
+            }
+        }
+
+        async function fetchConfig() {
+            try {
+                const res = await fetch(`${GS_API_URL}?action=read&sheet=store_config`);
+                const json = await res.json();
+                if (json.status === 'success' && json.data.length > 0) {
+                    configData = json.data[0];
+                    applyConfig();
+                }
+            } catch (e) {
+                console.error("Gagal mengambil config:", e);
+            }
+        }
+
+        function applyConfig() {
+            if (configData.home_text) {
+                document.getElementById('home-welcome-text').innerText = configData.home_text;
+            }
+            if (configData.about_text) {
+                document.getElementById('about-content-text').innerText = configData.about_text;
+            }
+            
+            // Format WhatsApp Phone
+            let phone = configData.contact_phone ? configData.contact_phone.toString().replace(/[^0-9]/g, '') : CONTACT_WA;
+            if (phone.startsWith('0')) phone = '62' + phone.substring(1);
+            
+            document.getElementById('btn-wa-floating').href = `https://wa.me/${phone}?text=Halo%20ANANDA%20TASIKMALAYA,%20saya%20ingin%20bertanya%20mengenai%20produk.`;
+
+            // Dynamic Config Overrides if available
+            if (configData.link_instagram) document.getElementById('btn-instagram').href = configData.link_instagram;
+            if (configData.link_facebook) document.getElementById('btn-facebook').href = configData.link_facebook;
+            if (configData.link_tiktok) document.getElementById('btn-tiktok').href = configData.link_tiktok;
+            if (configData.email) document.getElementById('btn-email').href = `mailto:${configData.email}`;
+            if (configData.gmaps_embed_url) document.getElementById('gmaps-iframe').src = configData.gmaps_embed_url;
+        }
+
+        function renderProducts() {
+            const filtered = productsList.filter(p => {
+                const matchCategory = activeCategory === 'Semua' || p.category === activeCategory;
+                const searchQ = document.getElementById('search-input').value.toLowerCase();
+                const matchSearch = p.name ? p.name.toLowerCase().includes(searchQ) : true;
+                return matchCategory && matchSearch;
+            });
+
+            // Render Home Grid (Max 8)
+            const homeGrid = document.getElementById('home-products-grid');
+            homeGrid.innerHTML = productsList.slice(0, 8).map(p => createProductCardHTML(p)).join('');
+
+            // Render Catalog Grid
+            const catalogGrid = document.getElementById('catalog-products-grid');
+            if (filtered.length === 0) {
+                catalogGrid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">Tidak ada produk ditemukan.</div>`;
+            } else {
+                catalogGrid.innerHTML = filtered.map(p => createProductCardHTML(p)).join('');
+            }
+        }
+
+        function createProductCardHTML(p) {
+            let imgArr = [];
+            try {
+                imgArr = typeof p.images === 'string' && p.images.startsWith('[') ? JSON.parse(p.images) : [p.images];
+            } catch(e) {
+                imgArr = [p.images];
+            }
+            const firstImg = imgArr[0] || 'https://via.placeholder.com/300';
+
+            return `
+                <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition overflow-hidden cursor-pointer flex flex-col border border-gray-100" onclick="openDetailModal(${p.id})">
+                    <div class="relative pt-[100%] bg-gray-100">
+                        <img src="${firstImg}" class="absolute inset-0 w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/300'">
+                        ${p.stock_status === 'Habis' ? `<span class="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded">Habis</span>` : ''}
+                    </div>
+                    <div class="p-3 flex flex-col flex-grow justify-between">
+                        <div>
+                            <span class="text-[10px] text-gray-400 uppercase font-semibold">${p.category || 'Umum'}</span>
+                            <h3 class="font-semibold text-xs md:text-sm text-gray-800 line-clamp-2 leading-snug">${p.name}</h3>
+                        </div>
+                        <div class="mt-2">
+                            <p class="text-brand-red font-extrabold text-sm md:text-base">${p.price_formatted || 'Rp ' + Number(p.raw_price||0).toLocaleString('id-ID')}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function filterCategory(cat) {
+            activeCategory = cat;
+            document.querySelectorAll('.cat-pill').forEach(btn => {
+                if (btn.innerText.trim() === cat) {
+                    btn.className = 'cat-pill px-4 py-1.5 rounded-full border bg-brand-red text-white whitespace-nowrap font-medium text-xs';
+                } else {
+                    btn.className = 'cat-pill px-4 py-1.5 rounded-full border bg-gray-100 text-gray-700 whitespace-nowrap font-medium text-xs';
+                }
+            });
+            showPage('catalog');
+            renderProducts();
+        }
+
+        function applyFilters() {
+            renderProducts();
+        }
+
+        function openDetailModal(id) {
+            const p = productsList.find(item => String(item.id) === String(id));
+            if (!p) return;
+
+            let imgArr = [];
+            try {
+                imgArr = typeof p.images === 'string' && p.images.startsWith('[') ? JSON.parse(p.images) : [p.images];
+            } catch(e) { imgArr = [p.images]; }
+
+            let sizes = [];
+            try { sizes = typeof p.sizes === 'string' && p.sizes.startsWith('[') ? JSON.parse(p.sizes) : (p.sizes ? p.sizes.split(',') : []); } catch(e){}
+
+            let colors = [];
+            try { colors = typeof p.colors === 'string' && p.colors.startsWith('[') ? JSON.parse(p.colors) : (p.colors ? p.colors.split(',') : []); } catch(e){}
+
+            const modalBody = document.getElementById('detail-modal-body');
+            modalBody.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <!-- Click image to trigger Fullscreen Modal -->
+                        <div class="relative cursor-pointer group" onclick="openFullscreenImage('${imgArr[0]}')">
+                            <img src="${imgArr[0] || 'https://via.placeholder.com/300'}" class="w-full h-64 md:h-80 object-cover rounded-xl border">
+                            <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition rounded-xl flex items-center justify-center text-white font-semibold text-xs">
+                                <i class="fa-solid fa-expand text-xl mr-2"></i> Klik Layar Penuh
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <span class="text-xs bg-red-100 text-brand-red font-bold px-2 py-1 rounded">${p.category || 'Umum'}</span>
+                            <h2 class="text-xl font-bold text-gray-800 mt-2">${p.name}</h2>
+                            <p class="text-2xl font-extrabold text-brand-red mt-1">${p.price_formatted || 'Rp ' + Number(p.raw_price||0).toLocaleString('id-ID')}</p>
+                        </div>
+
+                        ${sizes.length > 0 ? `
+                            <div>
+                                <span class="text-xs font-bold text-gray-500 uppercase">Ukuran Tersedia:</span>
+                                <div class="flex flex-wrap gap-1.5 mt-1">
+                                    ${sizes.map(s => `<span class="border text-xs px-2.5 py-1 rounded-md bg-gray-50">${s.trim()}</span>`).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        ${colors.length > 0 ? `
+                            <div>
+                                <span class="text-xs font-bold text-gray-500 uppercase">Pilihan Warna:</span>
+                                <div class="flex flex-wrap gap-1.5 mt-1">
+                                    ${colors.map(c => `<span class="border text-xs px-2.5 py-1 rounded-md bg-gray-50">${c.trim()}</span>`).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        <div>
+                            <span class="text-xs font-bold text-gray-500 uppercase">Deskripsi:</span>
+                            <p class="text-xs text-gray-600 mt-1 whitespace-pre-line leading-relaxed">${p.description || 'Tidak ada deskripsi.'}</p>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="border-t pt-4 space-y-2">
+                            <button onclick="addToCart(${p.id})" class="w-full bg-brand-red hover:bg-brand-darkred text-white font-bold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 text-sm shadow">
+                                <i class="fa-solid fa-cart-plus"></i> + Keranjang Belanja
+                            </button>
+                            <button onclick="orderViaWA('${p.name}', '${p.price_formatted || p.raw_price}')" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 text-sm shadow">
+                                <i class="fa-brands fa-whatsapp"></i> Order via WhatsApp
+                            </button>
+                        </div>
+
+                        <!-- Marketplace Links -->
+                        <div class="border-t pt-2 space-y-2">
+                            <span class="text-xs font-bold text-gray-700 block mb-1">Beli Resmi via Marketplace:</span>
+                            ${p.link_shopee ? `<a href="${p.link_shopee}" target="_blank" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 text-xs rounded-lg flex items-center justify-center gap-2 shadow"><i class="fa-solid fa-bag-shopping"></i> Shopee</a>` : ''}
+                            ${p.link_lazada ? `<a href="${p.link_lazada}" target="_blank" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 text-xs rounded-lg flex items-center justify-center gap-2 shadow"><i class="fa-solid fa-cart-shopping"></i> Lazada</a>` : ''}
+                            ${p.link_tiktok ? `<a href="${p.link_tiktok}" target="_blank" class="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 text-xs rounded-lg flex items-center justify-center gap-2 shadow"><i class="fa-brands fa-tiktok"></i> TikTok Shop</a>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('detail-modal').classList.remove('hidden');
+            document.getElementById('detail-modal').classList.add('flex');
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detail-modal').classList.add('hidden');
+            document.getElementById('detail-modal').classList.remove('flex');
+        }
+
+        /* Fullscreen Image Feature */
+        function openFullscreenImage(imgSrc) {
+            document.getElementById('fullscreen-img').src = imgSrc;
+            document.getElementById('fullscreen-modal').classList.remove('hidden');
+            document.getElementById('fullscreen-modal').classList.add('flex');
+        }
+
+        function closeFullscreenImage() {
+            document.getElementById('fullscreen-modal').classList.add('hidden');
+            document.getElementById('fullscreen-modal').classList.remove('flex');
+        }
+
+        /* Direct WhatsApp Order Feature */
+        function orderViaWA(productName, price) {
+            let phone = configData.contact_phone ? configData.contact_phone.toString().replace(/[^0-9]/g, '') : CONTACT_WA;
+            if (phone.startsWith('0')) phone = '62' + phone.substring(1);
+
+            const msg = `Halo ANANDA TASIKMALAYA, saya berminat untuk memesan produk:\n\n- *${productName}* (${price})\n\nApakah stok masih tersedia?`;
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        /* Shopping Cart System */
+        function addToCart(productId) {
+            const product = productsList.find(p => String(p.id) === String(productId));
+            if (!product) return;
+
+            const existingIndex = cart.findIndex(item => String(item.id) === String(productId));
+            if (existingIndex > -1) {
+                cart[existingIndex].qty += 1;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+            updateCartUI();
+            
+            // Show custom notification replacing native alert
+            showNotification(`${product.name} ditambahkan ke keranjang!`);
+        }
+
+        function showNotification(message) {
+            let toast = document.getElementById('app-toast');
+            if(!toast) {
+                toast = document.createElement('div');
+                toast.id = 'app-toast';
+                toast.className = 'fixed top-16 right-5 bg-gray-900 text-white text-xs px-4 py-2.5 rounded-lg shadow-xl z-50 transition-opacity duration-300 opacity-0 pointer-events-none';
+                document.body.appendChild(toast);
+            }
+            toast.innerText = message;
+            toast.classList.remove('opacity-0');
+            toast.classList.add('opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0');
+            }, 2500);
+        }
+
+        function updateCartUI() {
+            const badge = document.getElementById('cart-badge');
+            const totalQty = cart.reduce((acc, item) => acc + item.qty, 0);
+            badge.innerText = totalQty;
+
+            const container = document.getElementById('cart-items-container');
+            if (cart.length === 0) {
+                container.innerHTML = `<p class="text-center text-gray-400 py-10 text-sm">Keranjang belanja Anda masih kosong.</p>`;
+                document.getElementById('cart-total-price').innerText = 'Rp 0';
+                return;
+            }
+
+            let totalPrice = 0;
+            container.innerHTML = cart.map(item => {
+                const price = Number(item.raw_price || 0);
+                totalPrice += price * item.qty;
+                return `
+                    <div class="flex items-center justify-between border-b pb-3">
+                        <div class="flex-1 pr-2">
+                            <h4 class="font-bold text-xs md:text-sm text-gray-800 line-clamp-1">${item.name}</h4>
+                            <p class="text-xs text-brand-red font-semibold">Rp ${price.toLocaleString('id-ID')}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeQty(${item.id}, -1)" class="w-6 h-6 bg-gray-200 rounded flex items-center justify-center text-xs font-bold hover:bg-gray-300">-</button>
+                            <span class="text-xs font-bold w-4 text-center">${item.qty}</span>
+                            <button onclick="changeQty(${item.id}, 1)" class="w-6 h-6 bg-gray-200 rounded flex items-center justify-center text-xs font-bold hover:bg-gray-300">+</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('cart-total-price').innerText = 'Rp ' + totalPrice.toLocaleString('id-ID');
+        }
+
+        function changeQty(id, delta) {
+            const index = cart.findIndex(item => String(item.id) === String(id));
+            if (index > -1) {
+                cart[index].qty += delta;
+                if (cart[index].qty <= 0) {
+                    cart.splice(index, 1);
+                }
+            }
+            updateCartUI();
+        }
+
+        function openCartModal() {
+            document.getElementById('cart-modal').classList.remove('hidden');
+            document.getElementById('cart-modal').classList.add('flex');
+            updateCartUI();
+        }
+
+        function closeCartModal() {
+            document.getElementById('cart-modal').classList.add('hidden');
+            document.getElementById('cart-modal').classList.remove('flex');
+        }
+
+        function checkoutWhatsApp() {
+            if (cart.length === 0) {
+                showNotification('Keranjang belanja Anda kosong.');
+                return;
+            }
+
+            let phone = configData.contact_phone ? configData.contact_phone.toString().replace(/[^0-9]/g, '') : CONTACT_WA;
+            if (phone.startsWith('0')) phone = '62' + phone.substring(1);
+
+            let text = "Halo ANANDA TASIKMALAYA, saya mau pesan produk berikut:\n\n";
+            let grandTotal = 0;
+
+            cart.forEach((item, i) => {
+                const subtotal = Number(item.raw_price || 0) * item.qty;
+                grandTotal += subtotal;
+                text += `${i + 1}. *${item.name}* x${item.qty} = Rp ${subtotal.toLocaleString('id-ID')}\n`;
+            });
+
+            text += `\n*Total Keseluruhan:* Rp ${grandTotal.toLocaleString('id-ID')}\n\nMohon informasi proses pembayaran dan pengiriman. Terima kasih!`;
+
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
+        }
+    </script>
 </body>
 </html>
